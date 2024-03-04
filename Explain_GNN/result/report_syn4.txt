@@ -1,0 +1,3 @@
+syn4, 800 samples, top_6 | Accuracy: 0.9733333333333334
+syn4, 800 samples, top_6 | Precision: 0.9733333333333334
+

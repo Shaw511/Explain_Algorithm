@@ -1,0 +1,22 @@
+
+syn1, 800 samples, top_5 | Accuracy: 0.988
+syn1, 800 samples, top_5 | Precision: 0.988
+
+syn1, 800 samples, top_5 | Accuracy: 0.984
+syn1, 800 samples, top_5 | Precision: 0.984
+
+syn1, 800 samples, top_5 | Accuracy: 0.984
+syn1, 800 samples, top_5 | Precision: 0.984
+
+syn1, 800 samples, top_5 | Accuracy: 0.984
+syn1, 800 samples, top_5 | Precision: 0.984
+
+syn1, 800 samples, top_5 | Accuracy: 0.912
+syn1, 800 samples, top_5 | Precision: 0.912
+
+syn1, 5000 samples, top_5 | Accuracy: 0.984
+syn1, 5000 samples, top_5 | Precision: 0.984
+
+syn1, 5000 samples, top_5 | Accuracy: 0.968
+syn1, 5000 samples, top_5 | Precision: 0.968
+

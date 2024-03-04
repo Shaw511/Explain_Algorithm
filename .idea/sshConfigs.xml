@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="114.213.232.140" id="20606ac1-f32d-4924-bf5a-390293804683" port="6622" nameFormat="DESCRIPTIVE" username="wangyujie" />
+      <sshConfig authType="PASSWORD" host="114.213.211.147" id="13e8516f-4107-4005-b2e2-71a27255cf86" port="22" nameFormat="DESCRIPTIVE" username="user" />
+    </configs>
+  </component>
+</project>

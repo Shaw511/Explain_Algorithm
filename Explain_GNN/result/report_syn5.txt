@@ -1,0 +1,6 @@
+syn5, 800 samples, top_9 | Accuracy: 0.8311111111111111
+syn5, 800 samples, top_9 | Precision: 0.8329621380846325
+
+syn5, 800 samples, top_9 | Accuracy: 0.8311111111111111
+syn5, 800 samples, top_9 | Precision: 0.8329621380846325
+

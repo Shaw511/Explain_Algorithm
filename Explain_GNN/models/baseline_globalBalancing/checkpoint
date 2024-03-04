@@ -1,0 +1,2 @@
+model_checkpoint_path: "baseline_globalBalancing.ckpt"
+all_model_checkpoint_paths: "baseline_globalBalancing.ckpt"
