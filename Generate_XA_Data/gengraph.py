@@ -4,7 +4,7 @@
 """
 
 import os
-
+import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -132,6 +132,17 @@ def gen_syn1(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     feature_generator.gen_node_features(G)
 
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes)
+
+    # 绘制图G
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    matplotlib.use('TkAgg')
+    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G)  # 定义节点位置
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title("Synthetic Graph")
+    plt.show()
+
     return G, role_id, name
 
 
@@ -160,8 +171,9 @@ def gen_syn2(nb_shapes=100, width_basis=350, feature_generator=None):
     mu_2, sigma_2 = np.array([1.0] * 2 + random_mu), np.array([0.5] * 2 + random_sigma)
     feat_gen_G1 = featgen.GaussianFeatureGen(mu=mu_1, sigma=sigma_1)
     feat_gen_G2 = featgen.GaussianFeatureGen(mu=mu_2, sigma=sigma_2)
-    G1, role_id1, name = gen_syn1(feature_generator=feat_gen_G1, m=4)
-    G2, role_id2, name = gen_syn1(feature_generator=feat_gen_G2, m=4)
+    G1, role_id1, name = gen_syn1(nb_shapes=nb_shapes, width_basis=width_basis,feature_generator=feat_gen_G1, m=4)
+    print(role_id1)
+    G2, role_id2, name = gen_syn1(nb_shapes=nb_shapes, width_basis=width_basis,feature_generator=feat_gen_G2, m=4)
     G1_size = G1.number_of_nodes()
     num_roles = max(role_id1) + 1
     role_id2 = [r + num_roles for r in role_id2]
@@ -178,6 +190,18 @@ def gen_syn2(nb_shapes=100, width_basis=350, feature_generator=None):
     G = join_graph(G1, G2, n_pert_edges)
 
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes) + "_2comm"
+
+    # 增加代码_ethan_xuan
+
+    # 定义节点颜色映射
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}   # 根据标签值设置颜色
+
+    # 绘制生成的图G
+    pos = nx.spring_layout(G)  # 定义节点布局
+    node_colors = [color_map[label[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title(name)  # 设置标题
+    plt.show()  # 显示图形
 
     return G, label, name
 
@@ -201,7 +225,7 @@ def gen_syn3(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     basis_type = "ba"
     list_shapes = [["grid", 3]] * nb_shapes
 
-#     plt.figure(figsize=(8, 6), dpi=300)
+    # plt.figure(figsize=(8, 6), dpi=300)
 
     G, role_id, _ = synthetic_structsim.build_graph(
         width_basis, basis_type, list_shapes, start=0, m=5
@@ -213,6 +237,16 @@ def gen_syn3(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     feature_generator.gen_node_features(G)
 
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes)
+
+    # 绘制图G
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    matplotlib.use('TkAgg')
+    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G)  # 定义节点位置
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title("Synthetic Graph")
+    plt.show()
     return G, role_id, name
 
 
@@ -222,7 +256,7 @@ def gen_syn4(nb_shapes=60, width_basis=8, feature_generator=None, m=4):
     Start with a tree and attach cycle-shaped subgraphs.
 
     Args:
-        nb_shapes         :  The number of shapes (here 'houses') that should be added to the base graph.
+        nb_shapes         :  The number of shapes (here 'cycles') that should be added to the base graph.
         width_basis       :  The width of the basis graph (here a random 'Tree').
         feature_generator :  A `FeatureGenerator` for node features. If `None`, add constant features to nodes.
         m                 :  The tree depth.
@@ -248,6 +282,15 @@ def gen_syn4(nb_shapes=60, width_basis=8, feature_generator=None, m=4):
 
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes)
 
+    # 绘制图G
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    matplotlib.use('TkAgg')
+    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G)  # 定义节点位置
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title("Synthetic Graph")
+    plt.show()
     return G, role_id, name
 
 
@@ -283,6 +326,16 @@ def gen_syn5(nb_shapes=80, width_basis=8, feature_generator=None, m=3):
 
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes)
 
+    # 绘制图G
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    matplotlib.use('TkAgg')
+    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G)  # 定义节点位置
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title("Synthetic Graph")
+    plt.show()
+
     return G, role_id, name
 
 def gen_syn6(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
@@ -291,7 +344,7 @@ def gen_syn6(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     Start with Barabasi-Albert graph and attach bottle-shaped subgraphs.
 
     Args:
-        nb_shapes         :  The number of shapes (here 'houses') that should be added to the base graph.
+        nb_shapes         :  The number of shapes (here 'bottles') that should be added to the base graph.
         width_basis       :  The width of the basis graph (here 'Barabasi-Albert' random graph).
         feature_generator :  A `FeatureGenerator` for node features. If `None`, add constant features to nodes.
         m                 :  number of edges to attach to existing node (for BA graph)
@@ -316,5 +369,15 @@ def gen_syn6(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     feature_generator.gen_node_features(G)
     
     name = basis_type + "_" + str(width_basis) + "_" + str(nb_shapes)
+
+    # 绘制图G
+    color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    matplotlib.use('TkAgg')
+    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G)  # 定义节点位置
+    nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    plt.title("Synthetic Graph")
+    plt.show()
     
     return G, role_id, name

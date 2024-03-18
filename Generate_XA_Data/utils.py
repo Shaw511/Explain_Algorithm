@@ -16,7 +16,7 @@ import featgen
 
 def save_XAL(G,labels,prog_args):
     # Save the feature matrix, the adjacency matrix and the labels list
-    A = nx.adjacency_matrix(G).todense()
+    A = nx.to_scipy_sparse_matrix(G).tocsr()
     X = np.asarray([G.nodes[node]['feat'] for node in list(G.nodes)])
     pathA = os.path.join('XAL',prog_args.dataset+'_A')
     pathX = os.path.join('XAL',prog_args.dataset+'_X')
