@@ -59,12 +59,16 @@ def load_ckpt(args, isbest=False):
     return ckpt
 
 
-def load_XA(dataname, datadir="../Generate_XA_Data/XAL"):
+def load_XA(dataname, datadir="..\Generate_XA_Data\XAL"):
+    print(dataname)
+    print(datadir)
     prefix = os.path.join(datadir, dataname)
     filename_A = prefix + "_A.npy"
+    print(filename_A)
     filename_X = prefix + "_X.npy"
-    A = np.load(filename_A)
-    X = np.load(filename_X)
+    A = np.load(filename_A, allow_pickle=True)
+
+    X = np.load(filename_X, allow_pickle=True)
     return A, X
 
 

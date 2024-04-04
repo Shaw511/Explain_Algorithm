@@ -45,7 +45,24 @@ def consume_messages():
 if __name__ == '__main__':
     # consume_messages()
 
-    dataset_name = 'syn6'
-    print(f"Generating data for dataset {dataset_name}")
-    subprocess.run("cd Generate_XA_Data && python GenData.py --dataset {}".format(dataset_name), shell=True, check=True)
+    # #1 GenData
+    dataset_name = 'syn1'
+    num_perturb_samples = '5'
+    top_node = '5'
+    #
+    # print(f"Generating data for dataset {dataset_name}")
+    # subprocess.run("cd Generate_XA_Data && python GenData.py --dataset {}".format(dataset_name), shell=True, check=True)
+    #
+    # #2 GenGroundTruth
+    # print(f"Generating groundtruth for dataset {dataset_name}")
+    # subprocess.run("cd Generate_XA_Data && python GenGroundTruth.py --dataset {}".format(dataset_name), shell=True, check=True)
+
+    #3 Train GNN
+    print(f"Generating GNN for dataset {dataset_name}")
+    subprocess.run("cd Train_GNN_model && python train.py --dataset {}".format(dataset_name), shell=True, check=True)
+
+    # #4 Explain GNN precision
+    # print(f"Explaining for dataset {dataset_name}, number of perturbing is {num_perturb_samples}, top-k when k is {top_node}")
+    # subprocess.run("cd Explain_GNN && python main_server.py --dataset {} --num_perturb_samples {} --topnode {}".format(dataset_name, num_perturb_samples, top_node), shell=True, check=True)
+
 

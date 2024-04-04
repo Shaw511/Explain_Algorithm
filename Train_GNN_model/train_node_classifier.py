@@ -6,6 +6,7 @@ from torch.autograd import Variable
 import utils
 import time
 import sklearn.metrics as metrics
+import scipy.sparse
 
 
 def evaluate_node(ypred, labels, train_idx, test_idx):
@@ -33,7 +34,18 @@ def evaluate_node(ypred, labels, train_idx, test_idx):
 
 
 def train(model, A, X, L, args, normalize_adjacency=False):
-    num_nodes = A.shape[0]
+    np.set_printoptions(threshold=np.inf)
+    A= A.reshape(1,-1)[0][0]
+    # <700x700 sparse matrix of type '<class 'numpy.int32'>' with 4110 stored elements in Compressed Sparse Row format>
+    print('type of A:',type(A)) # <class 'scipy.sparse._csr.csr_matrix'>
+    non_zero_elements = A.nnz
+    print('non_zero_elements:',non_zero_elements)# non_zero_elements: 4110
+    # for row in A:
+    #     print(row.toarray())
+    # print(A)
+    # 统计稀疏矩阵中非零元素的个数
+    num_nodes = A.shape[0]  # A是稀疏矩阵 这里输出的A.shape[0]即为节点的总数
+    print('num_nodes:', num_nodes)
     num_train = int(num_nodes * args.train_ratio)
     idx = [i for i in range(num_nodes)]
 
@@ -52,6 +64,10 @@ def train(model, A, X, L, args, normalize_adjacency=False):
     L_ = np.expand_dims(L, axis=0)
 
     labels_train = torch.tensor(L_[:, train_idx], dtype=torch.long)
+    #将A_从numpy数组转换为float64
+    # A_ = A_.toarray()
+    print(A_)
+
     adj = torch.tensor(A_, dtype=torch.float)
     x = torch.tensor(X_, requires_grad=True, dtype=torch.float)
     # scheduler是用来调整优化器的学习率的
@@ -107,4 +123,7 @@ def train(model, A, X, L, args, normalize_adjacency=False):
         "pred": ypred.cpu().detach().numpy(),
         "train_idx": train_idx,
     }
+    # ypred pred即为预测结果 研究一下怎么输出这个结果
+    
+
     utils.save_checkpoint(model, optimizer, args, num_epochs=-1, save_data=save_data)

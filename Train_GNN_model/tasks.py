@@ -2,12 +2,14 @@ import utils
 import models
 import train_node_classifier
 import numpy as np
+import torch
+from torchviz import make_dot
 
 
 def task_syn(args):
     # 读取数据和标签
-    A, X = utils.load_XA(args.dataset, datadir="../Generate_XA_Data/XAL")
-    L = utils.load_labels(args.dataset, datadir="../Generate_XA_Data/XAL")
+    A, X = utils.load_XA(args.dataset, datadir="..\Generate_XA_Data\XAL")
+    L = utils.load_labels(args.dataset, datadir="..\Generate_XA_Data\XAL")
     num_classes = max(L) + 1
     input_dim = X.shape[1]
     model = models.GcnEncoderNode(
@@ -19,6 +21,7 @@ def task_syn(args):
         bn=args.bn,  # batch normalization
         args=args,
     )
+
     train_node_classifier.train(model, A, X, L, args, normalize_adjacency=False)
 
 
