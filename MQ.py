@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 
     #4 Explain GNN precision
-    print(f"Explaining for dataset {dataset_name}, number of perturbing is {num_perturb_samples}, top-k when k is {top_node}")
+    # print(f"Explaining for dataset {dataset_name}, number of perturbing is {num_perturb_samples}, top-k when k is {top_node}")
     subprocess.run("cd Explain_GNN && python main_server.py --dataset {} --num_perturb_samples {} --topnode {}".format(dataset_name, num_perturb_samples, top_node), shell=True, check=True)
 
 
