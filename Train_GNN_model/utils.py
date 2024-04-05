@@ -4,14 +4,12 @@ import torch.optim as optim
 import torch
 from pathlib import Path
 
-
 def gen_prefix(args):
     if args.bmname is not None:
         name = args.bmname
     else:
         name = args.dataset
     return name
-
 
 def create_filename(save_dir, args, isbest=False, num_epochs=-1):
     filename = os.path.join(save_dir, gen_prefix(args))
@@ -20,7 +18,6 @@ def create_filename(save_dir, args, isbest=False, num_epochs=-1):
     elif num_epochs > 0:
         filename = os.path.join(filename, str(num_epochs))
     return filename + ".pth.tar"
-
 
 def save_checkpoint(model, optimizer, args, num_epochs=-1, isbest=False, save_data=None):
     filename = create_filename(args.ckptdir, args, isbest, num_epochs=num_epochs)
@@ -35,7 +32,6 @@ def save_checkpoint(model, optimizer, args, num_epochs=-1, isbest=False, save_da
         },
         str(filename),
     )
-
 
 def load_ckpt(args, isbest=False):
     '''Load a pre-trained pytorch model from checkpoint.
@@ -58,35 +54,28 @@ def load_ckpt(args, isbest=False):
         raise Exception("File not found.")
     return ckpt
 
+def load_XA(dataname, datadir = "../Generate_XA_Data/XAL"):
+    prefix = os.path.join(datadir,dataname)
+    filename_A = prefix +"_A.npy"
+    filename_X = prefix +"_X.npy"
 
-def load_XA(dataname, datadir="..\Generate_XA_Data\XAL"):
-    print(dataname)
-    print(datadir)
-    prefix = os.path.join(datadir, dataname)
-    filename_A = prefix + "_A.npy"
-    print(filename_A)
-    filename_X = prefix + "_X.npy"
-    A = np.load(filename_A, allow_pickle=True)
-
-    X = np.load(filename_X, allow_pickle=True)
+    A = np.load(filename_A, allow_pickle = True)
+    X = np.load(filename_X, allow_pickle = True)
     return A, X
 
-
-def load_labels(dataname, datadir="../Generate_XA_Data/XAL"):
-    prefix = os.path.join(datadir, dataname)
-    filename_L = prefix + "_L.npy"
+def load_labels(dataname, datadir = "../Generate_XA_Data/XAL"):
+    prefix = os.path.join(datadir,dataname)
+    filename_L = prefix +"_L.npy"
     L = np.load(filename_L)
     return L
-
 
 def normalize_A(A):
     sqrt_deg = np.diag(1.0 / np.sqrt(np.sum(A, axis=0, dtype=float).squeeze()))
     A_ = np.matmul(np.matmul(sqrt_deg, A), sqrt_deg)
     return A_
 
-
 def build_optimizer(args, params, weight_decay=0.0):
-    filter_fn = filter(lambda p: p.requires_grad, params)
+    filter_fn = filter(lambda p : p.requires_grad, params)
     if args.opt == 'adam':
         optimizer = optim.Adam(filter_fn, lr=args.lr, weight_decay=weight_decay)
     elif args.opt == 'sgd':
