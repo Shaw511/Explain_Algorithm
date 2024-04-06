@@ -275,6 +275,34 @@ class Node_Explainer:
             print("*"*100)
             print(f"为当前节点 {target} 生成可解释节点")
             print("当前节点的n-hop邻居数量为：", len(neighbors_list[target]))
+
+            # 尝试展示n-hop节点图
+            print('尝试展示n-hop节点图：')
+            # 创建一个有向图
+            G = nx.DiGraph()
+            # 添加节点
+            nodes = neighbors_list.keys()
+            G.add_nodes_from(nodes)
+            # 添加边
+            for node in nodes:
+                neighbors = neighbors_list[node]
+                for neighbor in neighbors:
+                    G.add_edge(node, neighbor)
+            # 画图
+            pos = nx.spring_layout(G)  # 定义布局
+            nx.draw(G, pos, with_labels=True, node_size=500, node_color='skyblue', font_size=10, font_color='black',
+                    edge_color='gray')
+            # 在节点周围标注n-hop邻居数量
+            for node in nodes:
+                x, y = pos[node]
+                neighbors_count = len(neighbors_list[node])
+                plt.text(x, y, f'n-hop neighbors: {neighbors_count}', fontsize=8, ha='center', va='bottom')
+            plt.show()
+
+
+
+
+
             # 首先对n-hop邻居进行扰动，生成每个待解释节点对应的数据
             nhops_sample = []
             target_sample = []

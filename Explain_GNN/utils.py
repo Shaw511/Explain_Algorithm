@@ -71,8 +71,8 @@ def load_XA(dataname, datadir = "../Generate_XA_Data/XAL"):
     prefix = os.path.join(datadir,dataname)
     filename_A = prefix +"_A.npy"
     filename_X = prefix +"_X.npy"
-    A = np.load(filename_A)
-    X = np.load(filename_X)
+    A = np.load(filename_A, allow_pickle = True)
+    X = np.load(filename_X, allow_pickle = True)
     return A, X
 
 def load_labels(dataname, datadir = "../Generate_XA_Data/XAL"):
