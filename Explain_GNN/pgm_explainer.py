@@ -281,24 +281,23 @@ class Node_Explainer:
             # 创建一个有向图
             G = nx.DiGraph()
             # 添加节点
-            nodes = neighbors_list.keys()
-            G.add_nodes_from(nodes)
+            # nodes = neighbors_list.keys()
+            G.add_node(target)
             # 添加边
-            for node in nodes:
-                neighbors = neighbors_list[node]
-                for neighbor in neighbors:
-                    G.add_edge(node, neighbor)
+            neighbors = neighbors_list[target]
+            print('当前节点的邻居节点有：', neighbors)
+            for neighbor in neighbors:
+                G.add_edge(target, neighbor)
             # 画图
             pos = nx.spring_layout(G)  # 定义布局
             nx.draw(G, pos, with_labels=True, node_size=500, node_color='skyblue', font_size=10, font_color='black',
                     edge_color='gray')
             # 在节点周围标注n-hop邻居数量
-            for node in nodes:
-                x, y = pos[node]
-                neighbors_count = len(neighbors_list[node])
-                plt.text(x, y, f'n-hop neighbors: {neighbors_count}', fontsize=8, ha='center', va='bottom')
+            x, y = pos[target]
+            neighbors_count = len(neighbors_list[target])
+            plt.text(x, y, f'n-hop neighbors: {neighbors_count}', fontsize=8, ha='center', va='bottom')
             plt.show()
-
+            plt.close()
 
 
 
@@ -376,6 +375,7 @@ class Node_Explainer:
                     print("Current pgm_nodes are: ", pgm_nodes)
                 ground_truth_nodes = get_ground_truth(target, prog_args)
                 print("Current ground_truth_nodes为：", ground_truth_nodes)
+
                 # 遍历得到的可解释结果,查看它是当前节点的几跳邻居
                 for node in pgm_nodes:
                     if node not in ground_truth_nodes:
@@ -385,6 +385,25 @@ class Node_Explainer:
                             distance_list.append(distance)
                         else:
                             print(f"节点 {node} 和节点 {target} 之间没有直接连接")
+
+
+            # 4.15添加 展示pgm_nodes图
+            print('pgm节点图:')
+            # 将解释性节点的颜色改成黄色
+            node_colors = ['yellow' if node in pgm_nodes else 'skyblue' for node in G.nodes]
+            for node in pgm_nodes:
+                node_index = np.where(neighbors_list[target] == node)[0][0] #由pgm_node值取其在neighbors_list中索引
+                p_value = p_values[node_index]
+                print(f"pgm节点{node}拥有p-value值为{p_value}")
+                x, y = pos[node]
+                plt.text(x, y, f"p={p_value}", fontsize=10, ha = 'center', va = 'center')
+            plt.axis('off')
+            plt.title('PGM节点图')
+            nx.draw(G, pos, with_labels=True, node_size=500, node_color=node_colors, font_size=10,
+                    font_color='black', edge_color='gray')
+            plt.show()
+            plt.close()
+
         print("当前模型得到得错误节点都是：", distance_list, "邻居")
         return explanations
 
