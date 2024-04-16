@@ -51,6 +51,7 @@ class GraphConv(nn.Module):
             # att = self.softmax(att)
             adj = adj * att
 
+
         y = torch.matmul(adj, x)
         y = torch.matmul(y, self.weight)
         if self.add_self:

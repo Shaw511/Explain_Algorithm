@@ -7,6 +7,12 @@ import utils
 import time
 import sklearn.metrics as metrics
 import scipy.sparse
+import ctypes
+import struct
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
 
 
 def evaluate_node(ypred, labels, train_idx, test_idx):
@@ -34,15 +40,16 @@ def evaluate_node(ypred, labels, train_idx, test_idx):
 
 
 def train(model, A, X, L, args, normalize_adjacency=False):
+
+    #4月16日 修改正确的输入格式
+    print('A:', A) #输出的A是一个正常的矩阵
+    A_normal = A
     np.set_printoptions(threshold=np.inf)
-    A= A.reshape(1,-1)[0][0]
-    # <700x700 sparse matrix of type '<class 'numpy.int32'>' with 4110 stored elements in Compressed Sparse Row format>
+    A = scipy.sparse.csr_matrix(A)
+    print('A:', A) #输出的A是一个正常的稀疏矩阵
     print('type of A:',type(A)) # <class 'scipy.sparse._csr.csr_matrix'>
     non_zero_elements = A.nnz
-    print('non_zero_elements:',non_zero_elements)# non_zero_elements: 4110
-    # for row in A:
-    #     print(row.toarray())
-    # print(A)
+    print('non_zero_elements:',non_zero_elements)# non_zero_elements: 3948
     # 统计稀疏矩阵中非零元素的个数
     num_nodes = A.shape[0]  # A是稀疏矩阵 这里输出的A.shape[0]即为节点的总数
     print('num_nodes:', num_nodes)
@@ -64,24 +71,62 @@ def train(model, A, X, L, args, normalize_adjacency=False):
     L_ = np.expand_dims(L, axis=0)
 
     labels_train = torch.tensor(L_[:, train_idx], dtype=torch.long)
-    #将A_从numpy数组转换为float64
-    # A_ = A_.toarray()
-    print(A_)
 
-    adj = torch.tensor(A_, dtype=torch.float32)
+
+    #4月16日 适配数据类型
+    print('A_:',A_) #A_:  [<700x700 sparse matrix of type '<class 'numpy.intc'>'        with 3948 stored elements in Compressed Sparse Row format>]
+    A_array = A_[0].todense()  #现在是正常的二维数组
+    # print('A_array', A_array)
+    # 将A_array转换为torch.tensor
+    adj = torch.tensor(A_array, dtype=torch.float32)
+    X_ = X_[0]
+
+    print('X_:', X_)
     x = torch.tensor(X_, requires_grad=True, dtype=torch.float)
+    adj = torch.unsqueeze(adj,0)  # 为解决报错 4月16日
+
+
+    print('adj:', adj)
+    print('x:', x)
     # scheduler是用来调整优化器的学习率的
     scheduler, optimizer = utils.build_optimizer(args, model.parameters(), weight_decay=args.weight_decay)
     model.train()
 
     ypred = None
+
+    #4月16日 训练过程可视化
+    losses = []
+    train_accs = []
+    test_accs = []
+    train_precs = []
+    test_precs = []
+
+
+
     for epoch in range(args.num_epochs):
         begin_time = time.time()
         model.zero_grad()
+        # print('x.shape=', x.shape, 'adj.shape = ', adj.shape)
         ypred, adj_att = model(x, adj)
+
+
+
         # 因为前面对数据的维度进行了扩充，所以下面找训练数据的预测标签时有3个维度
         ypred_train = ypred[:, train_idx, :]
-        loss = model.loss(ypred_train, labels_train)
+
+        #4月16日 ypred预测结果 每一轮迭代 可视化
+        df = pd.DataFrame(ypred_train.detach().numpy()[0], columns = ['1', '2', '3', '4'])
+        # 创建表格可视化
+        fig, ax = plt.subplots()
+        ax.axis('off')
+        table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+        table.auto_set_font_size(False)
+        table.set_fontsize(14)
+        table.scale(1.5, 1.5)  # 改变表格大小
+        plt.show()
+
+
+        loss = model.loss(ypred_train, labels_train) # 这里使用的是交叉熵损失函数计算预测和原本标签
         loss.backward()
         # PyTorch的 torch.nn.utils.clip_grad_norm 函数的使用方式发生了变化，现在使用torch.nn.utils.clip_grad_norm_ 函数来代替
         # 对梯度的值进行修剪，防止梯度爆炸
@@ -107,11 +152,48 @@ def train(model, A, X, L, args, normalize_adjacency=False):
                 "{0:0.2f}".format(elapsed),
             )
 
+            #4月16日 训练过程可视化
+            losses.append(loss.item())
+            train_accs.append(result_train["acc"])
+            test_accs.append(result_test["acc"])
+            train_precs.append(result_train["prec"])
+            test_precs.append(result_test["prec"])
+
+
+
         if scheduler is not None:
             scheduler.step()
 
+    # 4月16日 训练过程可视化
+    plt.figure()
+    plt.plot(range(len(losses)), losses, label='Loss')
+    plt.plot(range(len(train_accs)), train_accs, label='Train Accuracy')
+    plt.plot(range(len(test_accs)), test_accs, label='Test Accuracy')
+    plt.plot(range(len(train_precs)), train_precs, label='Train Precision')
+    plt.plot(range(len(test_precs)), test_precs, label='Test Precision')
+    plt.xlabel('Epoch')
+    plt.ylabel('Value')
+    plt.legend()
+    plt.show()
+
+
     print("训练集上的混淆矩阵为：\n", result_train["conf_mat"])
+    # 4月16日 可视化 训练集混淆矩阵
+    train_conf_mat = pd.DataFrame(result_train["conf_mat"])
+    plt.figure()
+    sns.heatmap(train_conf_mat, annot=True, fmt="d", cmap="YlGnBu")
+    plt.title("Confusion Matrix on Training Set")
+    plt.show()
+
+
     print("测试集上的混淆矩阵为：\n", result_test["conf_mat"])
+    # 4月16日 可视化测试集混淆矩阵
+    test_conf_mat = pd.DataFrame(result_test["conf_mat"])
+    plt.figure()
+    sns.heatmap(test_conf_mat, annot=True, fmt="d", cmap="YlGnBu")
+    plt.title("Confusion Matrix on Test Set")
+    plt.show()
+
 
     model.eval()
     ypred, _ = model(x, adj)
