@@ -27,7 +27,7 @@ def train_model(dataset_name):
 def run_explain(dataset_name, numPerturbSamples, topNode):
     try:
 
-        subprocess.run("cd Explain_GNN && python main.py --dataset {} --num-perturb-samples {} --top-node {}".format(dataset_name, numPerturbSamples, topNode), shell=True,
+        subprocess.run("cd Explain_GNN && python main.py --dataset {}".format(dataset_name), shell=True,
                        check=True)
         print(f"PGM Explain for dataset {dataset_name}, numperturbsamples {numPerturbSamples}, topnode {topNode}")
     except subprocess.CalledProcessError as e:
@@ -35,7 +35,7 @@ def run_explain(dataset_name, numPerturbSamples, topNode):
 def run_eval(dataset_name, topNode):
     try:
 
-        subprocess.run("cd Explain_GNN && python evaluate_explanations.py --dataset {} --top-node {}".format(dataset_name, topNode), shell=True,
+        subprocess.run("cd Explain_GNN && python evaluate_explanations.py", shell=True,
                        check=True)
         print(f"Evaluating for explanations")
     except subprocess.CalledProcessError as e:
@@ -81,10 +81,10 @@ def consume_messages():
 if __name__ == '__main__':
     consume_messages()
 
-    # #1 GenData
-    dataset_name = 'syn1'
-    num_perturb_samples = '5'
-    top_node = '5'
+    # # #1 GenData
+    # dataset_name = 'syn1'
+    # num_perturb_samples = '5'
+    # top_node = '5'
     #
     # print(f"Generating data for dataset {dataset_name}")
     # subprocess.run("cd Generate_XA_Data && python GenData.py --dataset {}".format(dataset_name), shell=True, check=True)

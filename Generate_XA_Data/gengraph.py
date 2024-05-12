@@ -9,6 +9,11 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.colors as colors
+import networkx as nx
+import json
+import pika
+from PIL import Image
+import io
 
 # Set matplotlib backend to file writing
 plt.switch_backend("agg")
@@ -142,6 +147,31 @@ def gen_syn1(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
     plt.title("Synthetic Graph")
     plt.show()
+    #
+    # #5月12日 嵌入展示
+    # color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
+    # node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色
+    # matplotlib.use('TkAgg')
+    # plt.figure(figsize=(8, 6))
+    # pos = nx.spring_layout(G)  # 定义节点位置
+    # nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
+    # plt.title("Synthetic Graph")
+    #
+    # # Save the plot as an image
+    # buffer = io.BytesIO()
+    # plt.savefig(buffer, format='png')
+    # buffer.seek(0)
+    #
+    # # Send the image data to a message queue
+    # connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    # channel = connection.channel()
+    #
+    # channel.queue_declare(queue='algorithm_result_queue')
+    #
+    # channel.basic_publish(exchange='', routing_key='algorithm_result_queue', body=buffer.read())
+    # print("Sent image data to message queue")
+    #
+    # connection.close()
 
     return G, role_id, name
 
