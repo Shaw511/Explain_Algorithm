@@ -1,6 +1,6 @@
 
 syn1, 800 samples, top_5 | Accuracy: 0.988
-syn1, 800 samples, top_5 | Precision: 0.988
+syn1, 800 samples, top_5 | Precision: 0.94
 
 syn1, 800 samples, top_5 | Accuracy: 0.984
 syn1, 800 samples, top_5 | Precision: 0.984

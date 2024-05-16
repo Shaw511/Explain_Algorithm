@@ -14,6 +14,7 @@ import json
 import pika
 from PIL import Image
 import io
+import mpld3
 
 # Set matplotlib backend to file writing
 plt.switch_backend("agg")
@@ -147,7 +148,11 @@ def gen_syn1(nb_shapes=80, width_basis=300, feature_generator=None, m=5):
     nx.draw(G, pos, with_labels=True, node_color=node_colors)  # 绘制图
     plt.title("Synthetic Graph")
     plt.show()
-    #
+
+    html_graph = mpld3.fig_to_html(plt.gcf())  # 将matplotlib图形转换为html
+    with open("syn1_graph.html", "w") as f:
+        f.write(html_graph)
+
     # #5月12日 嵌入展示
     # color_map = {0: 'lightpink', 1: 'lightblue', 2: 'lightgreen', 3: 'lavender'}  # 根据标签值设置颜色
     # node_colors = [color_map[role_id[node]] for node in G.nodes()]  # 根据标签值获取节点颜色

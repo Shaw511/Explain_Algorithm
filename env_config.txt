@@ -5,3 +5,4 @@ scikit-learn
 torch
 torchviz
 pandas
+mpld3

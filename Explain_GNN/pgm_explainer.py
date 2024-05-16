@@ -325,7 +325,7 @@ class Node_Explainer:
                 soft_pred_perturb = np.asarray([softmax(np.asarray(pred_perturb_torch[0][node_].data)) for node_ in range(self.X.shape[0])])
                 # 判断此时目标节点的预测结果是否会发生变化
                 t_sample = []
-                if (soft_pred_perturb[target, np.argmax(soft_pred[target])] + pred_threshold) < np.max(soft_pred[target]):  # 这里有个问题是能直接用target当索引吗
+                if (soft_pred_perturb[target, np.argmax(soft_pred[target])] + pred_threshold) < np.max(soft_pred[target]):
                     t_sample.append(1)
                 else:
                     t_sample.append(0)
@@ -398,7 +398,7 @@ class Node_Explainer:
                 x, y = pos[node]
                 plt.text(x, y, f"p={p_value}", fontsize=10, ha = 'center', va = 'center')
             plt.axis('off')
-            plt.title('PGM节点图')
+            plt.title('PGM Nodes Graph')
             nx.draw(G, pos, with_labels=True, node_size=500, node_color=node_colors, font_size=10,
                     font_color='black', edge_color='gray')
             plt.show()

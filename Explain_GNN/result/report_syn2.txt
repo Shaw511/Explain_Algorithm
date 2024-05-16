@@ -22,3 +22,15 @@ syn2, 5000 samples, top_5 | Precision: 0.86
 syn2, 5000 samples, top_5 | Accuracy: 0.86
 syn2, 5000 samples, top_5 | Precision: 0.86
 
+syn2, 5000 samples, top_5 | Accuracy: 0.86
+syn2, 5000 samples, top_5 | Precision: 0.86
+
+syn2, 5000 samples, top_5 | Accuracy: 0.86
+syn2, 5000 samples, top_5 | Precision: 0.86
+
+syn2, 5000 samples, top_5 | Accuracy: 0.86
+syn2, 5000 samples, top_5 | Precision: 0.86
+
+syn2, 5000 samples, top_5 | Accuracy: 0.86
+syn2, 5000 samples, top_5 | Precision: 0.86
+

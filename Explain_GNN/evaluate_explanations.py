@@ -163,9 +163,9 @@ if prog_args.dataset is not None:
         evaluate_syn_explanation(explanations, prog_args)
 
 
-        # 4月15日添加 准确率精准性绘图 目前是默认图 因为有五个数据集没跑通
-        accuracy = [0.85, 0.87, 0.88, 0.90, 0.91]
-        precision = [0.75, 0.78, 0.80, 0.82, 0.85]
+        # 4月15日添加 准确率精准性绘图
+        accuracy = [0.984, 0.94, 0.88, 0.9288888888888889, 0.8311111111111111, 0.948]
+        precision = [0.94, 0.94, 0.9372197309417041, 0.9733333333333334, 0.8329621380846325, 0.948]
 
         plt.plot(accuracy, label='Accuracy')
         plt.plot(precision, label='Precision')
